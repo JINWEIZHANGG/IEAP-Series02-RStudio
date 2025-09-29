@@ -51,6 +51,26 @@ cor.test(nonuse$PANU, nonuse$EENU, method = "spearman")
 ```
   The results show that there is a significant positive correlation between PANU and SANU (rho = 0.22, p < 0.05), and between PANU and EENU (rho = 0.39, p < 0.01). This suggests that as the nonuse of the shoulder or elbow increases, the nonuse of the proximal arm also tends to increase. 
 
+  -Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
+  we do not predict a linear relationship between the two variables, but we can use a linear model to visualize the trend.
+```{r plot}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='blue', se=FALSE) +
+  # xlim(-100, 100) +
+  # ylim(-100, 100) +
+  labs(title="Scatter plot of PANU vs SANU", x="PANU (%)", y="SANU (%)") +
+  theme_minimal()
+ggplot(nonuse, aes(x=PANU, y=EENU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='blue', se=FALSE) +
+  # xlim(-100, 100) +
+  # ylim(-100, 100) +
+  labs(title="Scatter plot of PANU vs EENU", x="PANU (%)", y="EENU (%)") +
+  theme_minimal()
+```
+
   -Perform a linear regression for PANU-SANU (and for PANU-EENU)
 
   -Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
