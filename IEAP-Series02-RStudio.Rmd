@@ -43,17 +43,21 @@ In your notebook, make a clear description of the experiment, the variables and 
 ## Corelation analysis
 Below are some questions to guide your analysis.
 
-Is PANU correlated with SANU and/or EENU?
+  -Is PANU correlated with SANU and/or EENU?
+We use a Spearman correlation because we don't know if the data is normally distributed. We do not assume a linear relationship between the two variables. That means we use spearman as default method.
+```{r correlation-test}
+cor.test(nonuse$PANU, nonuse$SANU, method = "spearman") 
+cor.test(nonuse$PANU, nonuse$EENU, method = "spearman") 
+```
+  The results show that there is a significant positive correlation between PANU and SANU (rho = 0.22, p < 0.05), and between PANU and EENU (rho = 0.39, p < 0.01). This suggests that as the nonuse of the shoulder or elbow increases, the nonuse of the proximal arm also tends to increase. 
 
-Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
+  -Perform a linear regression for PANU-SANU (and for PANU-EENU)
 
-Perform a linear regression for PANU-SANU (and for PANU-EENU)
+  -Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
 
-Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
+  -Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
 
-Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
-
-What are the limits of your analysis?
+  -What are the limits of your analysis?
 
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
