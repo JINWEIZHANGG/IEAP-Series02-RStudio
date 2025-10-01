@@ -315,6 +315,26 @@ For drinking, the Wilcoxon test results show a P-value < 0.05, indicating the st
 For smoking, the Chi-square test results show a P-value > 0.05, indicating no statistically significant association between snoring and smoking status. The data do not support the stereotype that snorers smoke more.
 
 -Are men fatter?
+```{r}
+# 3.1 Statistical test: BMI by sex
+bmi_sex_test <- t.test(bmi ~ sex, data = snore)
+cat("\nTest results for BMI differences between males and females:\n")
+print(bmi_sex_test)
+
+# 3.2 Visualization: BMI boxplot by sex
+ggplot(snore, aes(x = sex, y = bmi, fill = sex)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "BMI Distribution by Sex",
+    x = "Sex", y = "BMI (kg/m²)"
+  ) +
+  scale_fill_manual(values = c("#66B2FF", "#FFB6C1")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+From P-value = 0.7162 > 0.05, indicating there is no significant difference between gender and bmi. From the mean, we could further verify it.
+
 -Do women smoke less?
 From a more general perspective:
 Are there any correlations between variables?
