@@ -248,11 +248,11 @@ Do the data confirm the following stereotypes? Provide a reasoned answer (data, 
 -Are snorers fatter?
 
 ```{r}
-# 1.1 Normality test (to choose between t-test or non-parametric test)
+# 1.1 Normality test 
 shapiro.test(snore$bmi[snore$snore == "Snorer"])
 shapiro.test(snore$bmi[snore$snore == "Non-snorer"])
 
-# 1.2 Statistical test (example: t-test if normal; use wilcox.test if non-normal)
+# 1.2 Statistical test 
 bmi_snore_test <- t.test(bmi ~ snore, data = snore)
 cat("Test results for BMI differences between snorers and non-snorers:\n")
 print(bmi_snore_test)
@@ -269,8 +269,51 @@ ggplot(snore, aes(x = snore, y = bmi, fill = snore)) +
   theme_minimal() +
   theme(legend.position = "none")
 ```
+The result shows the P-value > 0.05, it indicates there is no statistically significant difference in BMI between snorers and non-snorers. And the mean 
+The data do not support the stereotype that snorers are fatter. There is no statistically significant difference in BMI between snorers and non-snorers in this dataset.
+
 
 -Do snorers drink or smoke more?
+```{r}
+# 2.1 Compare alcohol consumption (alcool)
+alcohol_snore_test <- wilcox.test(alcool ~ snore, data = snore)
+cat("\nTest results for alcohol consumption between snorers and non-snorers:\n")
+print(alcohol_snore_test)
+
+# Visualization: Alcohol consumption boxplot
+ggplot(snore, aes(x = snore, y = alcool, fill = snore)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "Alcohol Consumption by Snoring Status",
+    x = "Snoring Status", y = "Alcohol Intake"
+  ) +
+  scale_fill_manual(values = c("#FF9999", "#66B2FF")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# 2.2 Compare smoking status (chi-square test)
+smoke_snore_table <- table(snore$snore, snore$tabac)
+smoke_snore_test <- chisq.test(smoke_snore_table)
+cat("\nTest results for association between snoring and smoking status:\n")
+print(smoke_snore_test)
+print(smoke_snore_table)  # Display contingency table
+
+# Visualization: Smoking prevalence bar plot
+prop.table(smoke_snore_table, margin = 1) %>%  # Proportions within snoring groups
+  as.data.frame() %>%
+  ggplot(aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_col(position = "dodge", width = 0.6) +
+  labs(
+    title = "Smoking Prevalence by Snoring Status",
+    x = "Snoring Status", y = "Proportion", fill = "Smoking Status"
+  ) +
+  scale_fill_manual(values = c("#999999", "#CCCCCC")) +
+  theme_minimal()
+```
+For drinking, the Wilcoxon test results show a P-value < 0.05, indicating the statistically significant difference in alcohol consumption between snorers and non-snorers. The data do support the stereotype that snorers drink more.
+For smoking, the Chi-square test results show a P-value > 0.05, indicating no statistically significant association between snoring and smoking status. The data do not support the stereotype that snorers smoke more.
+
 -Are men fatter?
 -Do women smoke less?
 From a more general perspective:
