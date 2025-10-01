@@ -21,6 +21,12 @@ As you will see, the data is far from perfect, but this is the reality of experi
 
 Download the file NonUse.csv from the course Moodle.
 
+```{r load-data}
+nonuse <- read.csv("data/test_data/NonUse.csv",sep=",",header=TRUE)
+head(nonuse)
+summary(nonuse)
+```
+
 This file contains measures of upper extremity nonuse:
 
 PANU: Proximal Arm Non Use
@@ -28,20 +34,76 @@ SANU: Shoulder Antepulsion Non Use
 EENU: Elbow Extension Non Use
 In your notebook, make a clear description of the experiment, the variables and the data. Do not forget to give the units of each variable, and the range of possible values.
 
+| none | discription                  | unit | range |
+|:-----|:-----------------------------|:-----|:------|
+| PANU | Proximal Arm Non Use         | %    | 0-100 |
+| SANU | Shoulder Antepulsion Non Use | %    | 0-100 |
+| EENU | Elbow Extension Non Use      | %    | 0-100 |
+
 ## Corelation analysis
 Below are some questions to guide your analysis.
 
-Is PANU correlated with SANU and/or EENU?
+  -Is PANU correlated with SANU and/or EENU?
+We use a Spearman correlation because we don't know if the data is normally distributed. We do not assume a linear relationship between the two variables. That means we use spearman as default method.
+```{r correlation-test}
+cor.test(nonuse$PANU, nonuse$SANU, method = "spearman") 
+cor.test(nonuse$PANU, nonuse$EENU, method = "spearman") 
+```
+  The results show that there is a significant positive correlation between PANU and SANU (rho = 0.22, p < 0.05), and between PANU and EENU (rho = 0.39, p < 0.01). This suggests that as the nonuse of the shoulder or elbow increases, the nonuse of the proximal arm also tends to increase. 
 
-Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
+  -Visualize the PANU-SANU relationship (and the PANU-EENU relationship)
+  we do not predict a linear relationship between the two variables, but we can use a linear model to visualize the trend.
+```{r plot}
+library(ggplot2)
+ggplot(nonuse, aes(x=PANU, y=SANU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='blue', se=FALSE) +
+  # xlim(-100, 100) +
+  # ylim(-100, 100) +
+  labs(title="Scatter plot of PANU vs SANU", x="PANU (%)", y="SANU (%)") +
+  theme_minimal()
+ggplot(nonuse, aes(x=PANU, y=EENU)) +
+  geom_point() +
+  geom_smooth(method='lm', formula= y~x, color='blue', se=FALSE) +
+  # xlim(-100, 100) +
+  # ylim(-100, 100) +
+  labs(title="Scatter plot of PANU vs EENU", x="PANU (%)", y="EENU (%)") +
+  theme_minimal()
+```
 
-Perform a linear regression for PANU-SANU (and for PANU-EENU)
+  -Perform a linear regression for PANU-SANU (and for PANU-EENU)
 
-Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
+  -Give the regression equations: PANU = a * SANU + b and PANU = a * EENU + b
+```{r lm-panu}
+lm_panu_sanu <- lm(PANU ~ SANU, data = nonuse)
+summary(lm_panu_sanu)
+coef(lm_panu_sanu)
+slope_panu_sanu <- coef(lm_panu_sanu)[2]
+intercept_panu_sanu <- coef(lm_panu_sanu)[1]
+cat("The regression equation for PANU is: PANU =", slope_panu_sanu, "* SANU +", intercept_panu_sanu, "\n")
 
-Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
+lm_panu_eenu <- lm(PANU ~ EENU, data = nonuse)
+summary(lm_panu_eenu)
+coef(lm_panu_eenu)
+slope_panu_eenu <- coef(lm_panu_eenu)[2]
+intercept_panu_eenu <- coef(lm_panu_eenu)[1]
+cat("The regression equation for PANU is: PANU =", slope_panu_eenu, "* EENU +", intercept_panu_eenu, "\n")
 
-What are the limits of your analysis?
+```
+| none | equation                               |
+|:-----|:---------------------------------------|
+| PANU~SANU | PANU = 0.100933 * SANU + 8.868194 |
+| PANU~EENU | PANU = 0.3985147 * EENU + 5.672947|
+
+
+  -Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
+
+This study analysed the association between proximal upper limb non-use (PANU) and shoulder anterior non-use (SANU) and elbow extension non-use (EENU). Spearman's correlation analysis revealed a significant positive correlation between PANU and SANU (rho=0.22, p<0.05), with an even stronger positive correlation observed with EENU (rho=0.39, p<0.01). This indicates that higher degrees of non-use at the shoulder and elbow joints correlate with increased non-use at the proximal upper limb. Linear regression further quantified these relationships: The equation for PANU versus SANU was: PANU = 0.101 × SANU + 8.868 (For every 1% increase in SANU, PANU increased by an average of 0.101%) ; the equation with EENU was PANU = 0.399 × EENU + 5.673 (for every 1% increase in EENU, PANU increased by an average of 0.399%). Results indicated that EENU exerted a more pronounced effect on PANU than SANU, though both correlations were moderately weak, suggesting potential confounding factors influencing PANU.
+(AI tools are used to translate and beautify it)
+
+  -What are the limits of your analysis?
+
+Correlation and regression analysis can only demonstrate the concomitant relationship between variables; they cannot establish causality.
 
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
@@ -49,17 +111,40 @@ In this series of exercises, you will explore how to compare two groups of data,
 ## Make clear what is a statistical test, and when to use it.
 Below are some questions to guide your analysis. You can answer them in your notebook, with a short sentence for each question.
 
-What is a median? A mean?
-What is a variance? A standard deviation?
-What is a normal distribution?
-What is a statistical test?
-When to use a statistical test?
-What is a parametric test? A non-parametric test?
-What are the assumptions of parametric tests?
-What are the assumptions of non-parametric tests?
-What is a p-value?
-What is the risk of error when using a statistical test?
-What is the difference between a paired and an unpaired test?
+-What is a median? A mean?
+Sort the data, and find the middle value. It may be the average of the two middle values if there is an even number of data points. (https://en.wikipedia.org/wiki/Median). Mean is the sum of all values divided by the number of values. (https://en.wikipedia.org/wiki/Mean)
+
+-What is a variance? A standard deviation?
+Variance is the average of the squared differences from the mean. It measures how far a set of numbers are spread out from their average value. (https://en.wikipedia.org/wiki/Variance) Standard deviation is the square root of the variance, and it provides a measure of the average distance between each data point and the mean. (https://en.wikipedia.org/wiki/Standard_deviation)
+
+-What is a normal distribution?
+A normal distribution, also known as Gaussian distribution, is a continuous probability distribution characterized by a symmetric, bell-shaped curve. It is defined by its mean and standard deviation, with most of the data points clustering around the mean and fewer points appearing as you move further away. (https://en.wikipedia.org/wiki/Normal_distribution)
+
+-What is a statistical test?
+A method for inferring whether the parameters or distribution of a population conform to a hypothesis based on sample data, with conclusions drawn by calculating a test statistic or p-value. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)
+
+-When to use a statistical test?
+When you want to determine if there is a significant difference between groups or if there is a relationship between variables, especially when dealing with sample data rather than entire populations. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)
+
+-What is a parametric test? A non-parametric test?
+Parametric tests are statistical tests that make assumptions about the parameters of the population distribution from which the samples are drawn, typically assuming a normal distribution. Examples include t-tests and ANOVA. (https://en.wikipedia.org/wiki/Parametric_statistics) 
+Non-parametric tests do not assume a specific population distribution and are used when data do not meet the assumptions required for parametric tests. Examples include the Mann-Whitney U test and the Wilcoxon signed-rank test. (https://en.wikipedia.org/wiki/Nonparametric_statistics)
+
+-What are the assumptions of parametric tests?
+Parametric tests typically assume that the data are normally distributed, that the samples are independent, and that the variances of the populations are equal (homoscedasticity). (https://en.wikipedia.org/wiki/Parametric_statistics#Assumptions)
+
+-What are the assumptions of non-parametric tests?
+Non-parametric tests generally assume that the data are independent and identically distributed, but they do not require the data to follow a specific distribution, such as normality. (https://en.wikipedia.org/wiki/Nonparametric_statistics#Assumptions)
+
+-What is a p-value?
+A p-value is the probability of obtaining test results at least as extreme as the observed results, assuming that the null hypothesis is true. It helps determine the statistical significance of the results. (https://en.wikipedia.org/wiki/P-value)
+
+-What is the risk of error when using a statistical test?
+The risk of error, often denoted by alpha (α), is the probability of rejecting the null hypothesis when it is actually true (Type I error). Commonly used significance levels are 0.05 or 0.01, indicating a 5% or 1% risk of making this error. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#Errors)
+
+-What is the difference between a paired and an unpaired test?
+A paired test is used when the data points in one group are related to the data points in another group, such as measurements taken from the same subjects before and after a treatment. An unpaired test is used when the data points in one group are independent of those in another group, such as comparing two different groups of subjects. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#Types_of_tests)
+
 You can use your favorite LLM, book or web site to answer these questions, but you have to provide at least one reference for each answer (book, article, URL, LLM prompt, etc.).
 
 ## Effect of treatment over time
@@ -77,19 +162,58 @@ Before going further, you have to make clear what are the measured variables. Wh
 Make a table, with one row per variable, and the following columns:
 
 | Variable | Description | Unit | Possible values | Expected change |
-
+|:---------|:-------------|:-----|:----------------|:----------------|
+|perf|cardiac function performance|-|125-148|increase|
+|time|time point|-|"before","after"|-|
 ### The analysis
 You want to know if the treatment has an effect on one or more of the measured variables.
+```{r}
+# Read data
+data <- read.csv("data/test_data/PrePost.csv")  # Assume the file is named PrePost.csv
+
+# Separate Before and After data
+before <- data[data$time == "Before", "perf"]
+after <- data[data$time == "After", "perf"]
+
+# Check normality of differences
+differences <- after - before
+shapiro.test(differences)
+
+# If p > 0.05 (normal), use paired t-test
+t_test <- t.test(after, before, paired = TRUE)
+t_test
+
+# # If p <= 0.05 (non-normal), use Wilcoxon signed-rank test
+# wilcox_test <- wilcox.test(after, before, paired = TRUE)
+# wilcox_test
+
+# Plot
+library(ggplot2)
+ggplot(data, aes(x = time, y = perf, group = 1)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Performance Before and After Treatment", x = "Time", y = "Performance")
+#boxplot
+ggplot(data, aes(x = time, y = perf)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Performance Before and After Treatment", x = "Time", y = "Performance")
+```
 
 Does the treatment have an effect?
+From the Shapiro-Wilk normality test, we see that the p-value is greater than 0.05, indicating that the differences between the before and after treatment data are normally distributed. Therefore, we can use a paired t-test to compare the means of the two related groups.
+The results of the paired t-test show a significant difference between the performance before and after treatment (t = -5.196, df = 9, p < 0.001). This indicates that the treatment has a significant effect on performance, with an increase in performance observed after the treatment.
 
 What comparison are you going to make?
+Paried comparison of performance before and after treatment.
 
 Which test will you use? Parametric or non-parametric?
+Parametric test (paired t-test) because the differences are normally distributed.
 
 Which graph illustrates the effect of the treatment?
+The line plot illustrates the effect of the treatment by showing individual performance changes from before to after treatment. The boxplot also provides a summary of the performance distribution before and after treatment, highlighting the median, quartiles, and potential outliers.
 
 What sentence will you write in your thesis to explain your result?
+A paired t-test was conducted to compare performance before and after treatment. The results indicated a significant increase in performance following the treatment (t(9) = -5.196, p < 0.001), suggesting that the rehabilitation training had a positive effect on cardiac function performance.
 
 ## Testing some stereotypes
 Humans have stereotypes, some of them are probably true, some others are probably false (e.g., ref ).
@@ -98,17 +222,168 @@ Here, we will test stereotypes about snorers… among others.
 
 ### The data
 Download the file snore.txt
+```{r}
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+snore <- read.table("data/test_data/snore.txt", header=TRUE)
+
+
+snore <- snore %>%
+  mutate(
+    bmi = weight / (height/100)^2,  # calculate BMI
+    sex = factor(sex, levels = c("H", "F"), labels = c("Male", "Female")),  #
+    snore = factor(snore, levels = c("O", "N"), labels = c("Snorer", "Non-snorer")),  # 
+    tabac = factor(tabac, levels = c("O", "N"), labels = c("Smoker", "Non-smoker"))  # 
+  )
+
+#
+str(snore)
+```
 
 This file contains anthropometric and qualitative measurements (1 person per line).
 
 ### The analysis
 Do the data confirm the following stereotypes? Provide a reasoned answer (data, figure, result sentence) for each question.
-Are snorers fatter?
-Do snorers drink or smoke more?
-Are men fatter?
-Do women smoke less?
+-Are snorers fatter?
+
+```{r}
+# 1.1 Normality test 
+shapiro.test(snore$bmi[snore$snore == "Snorer"])
+shapiro.test(snore$bmi[snore$snore == "Non-snorer"])
+
+# 1.2 Statistical test 
+bmi_snore_test <- t.test(bmi ~ snore, data = snore)
+cat("Test results for BMI differences between snorers and non-snorers:\n")
+print(bmi_snore_test)
+
+# 1.3 Visualization: BMI boxplot by snoring status
+ggplot(snore, aes(x = snore, y = bmi, fill = snore)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "BMI Distribution by Snoring Status",
+    x = "Snoring Status", y = "BMI (kg/m²)"
+  ) +
+  scale_fill_manual(values = c("#FF9999", "#66B2FF")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+The result shows the P-value > 0.05, it indicates there is no statistically significant difference in BMI between snorers and non-snorers. And the mean 
+The data do not support the stereotype that snorers are fatter. There is no statistically significant difference in BMI between snorers and non-snorers in this dataset.
+
+
+-Do snorers drink or smoke more?
+```{r}
+# 2.1 Compare alcohol consumption (alcool)
+alcohol_snore_test <- wilcox.test(alcool ~ snore, data = snore)
+cat("\nTest results for alcohol consumption between snorers and non-snorers:\n")
+print(alcohol_snore_test)
+
+# Visualization: Alcohol consumption boxplot
+ggplot(snore, aes(x = snore, y = alcool, fill = snore)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "Alcohol Consumption by Snoring Status",
+    x = "Snoring Status", y = "Alcohol Intake"
+  ) +
+  scale_fill_manual(values = c("#FF9999", "#66B2FF")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# 2.2 Compare smoking status (chi-square test)
+smoke_snore_table <- table(snore$snore, snore$tabac)
+smoke_snore_test <- chisq.test(smoke_snore_table)
+cat("\nTest results for association between snoring and smoking status:\n")
+print(smoke_snore_test)
+print(smoke_snore_table)  # Display contingency table
+
+# Visualization: Smoking prevalence bar plot
+prop.table(smoke_snore_table, margin = 1) %>%  # Proportions within snoring groups
+  as.data.frame() %>%
+  ggplot(aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_col(position = "dodge", width = 0.6) +
+  labs(
+    title = "Smoking Prevalence by Snoring Status",
+    x = "Snoring Status", y = "Proportion", fill = "Smoking Status"
+  ) +
+  scale_fill_manual(values = c("#999999", "#CCCCCC")) +
+  theme_minimal()
+```
+For drinking, the Wilcoxon test results show a P-value < 0.05, indicating the statistically significant difference in alcohol consumption between snorers and non-snorers. The data do support the stereotype that snorers drink more.
+For smoking, the Chi-square test results show a P-value > 0.05, indicating no statistically significant association between snoring and smoking status. The data do not support the stereotype that snorers smoke more.
+
+-Are men fatter?
+```{r}
+# 3.1 Statistical test: BMI by sex
+bmi_sex_test <- t.test(bmi ~ sex, data = snore)
+cat("\nTest results for BMI differences between males and females:\n")
+print(bmi_sex_test)
+
+# 3.2 Visualization: BMI boxplot by sex
+ggplot(snore, aes(x = sex, y = bmi, fill = sex)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "BMI Distribution by Sex",
+    x = "Sex", y = "BMI (kg/m²)"
+  ) +
+  scale_fill_manual(values = c("#66B2FF", "#FFB6C1")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+From P-value = 0.7162 > 0.05, indicating there is no significant difference between gender and bmi. From the mean, we could further verify it.
+
+-Do women smoke less?
+```{r}
+# 4.1 Statistical test: Association between sex and smoking (chi-square)
+smoke_sex_table <- table(snore$sex, snore$tabac)
+smoke_sex_test <- chisq.test(smoke_sex_table)
+cat("\nTest results for association between sex and smoking status:\n")
+print(smoke_sex_test)
+print(smoke_sex_table)  # Display contingency table
+
+# 4.2 Visualization: Smoking prevalence by sex
+prop.table(smoke_sex_table, margin = 1) %>%  # Proportions within sex groups
+  as.data.frame() %>%
+  ggplot(aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_col(position = "dodge", width = 0.6) +
+  labs(
+    title = "Smoking Prevalence by Sex",
+    x = "Sex", y = "Proportion", fill = "Smoking Status"
+  ) +
+  scale_fill_manual(values = c("#999999", "#CCCCCC")) +
+  theme_minimal()
+```
+The p-value = 0.00814 < 0.05, indicating there is significant difference between gender and smoke. From the table we got, the percentage of men who smoke is more than the percentage of women who smoke.
+
 From a more general perspective:
 Are there any correlations between variables?
+```{r}
+# 5.1 Extract quantitative variables and calculate correlations (Spearman for non-normal data)
+quant_vars <- snore %>% select(age, weight, height, bmi, alcool)
+cor_matrix <- cor(quant_vars, method = "spearman")
+p_matrix <- cor.mtest(quant_vars, method = "spearman")$p  # P-values for significance
+
+# 5.2 Visualization: Correlation matrix heatmap
+corrplot(
+  cor_matrix,
+  method = "color",
+  type = "upper",
+  addCoef.col = "black",  # Display correlation coefficients
+  p.mat = p_matrix,
+  sig.level = 0.05,       # Highlight significant correlations (p < 0.05)
+  insig = "blank",        # Omit non-significant correlations
+  title = "Correlation Matrix of Quantitative Variables",
+  mar = c(0, 0, 1, 0)
+)
+```
+This shows:
+Weight and height are strongly positively correlated (0.93).
+Weight and BMI, height and BMI are moderately positively correlated (0.54, 0.30).
+Age and alcohol have little to no clear correlation with other variables here.
+
 
 # Epilogue: beyond the scope of this series
 Finally, some of you may want to go beyond the scope of this series with new questions, such as:
@@ -116,7 +391,9 @@ Finally, some of you may want to go beyond the scope of this series with new que
 Can you predict the value of one variable from the others? (linear regression, logistic regression, etc.)
 Can you classify individuals based on their variables? (clustering, PCA, etc.)
 NOTE: These questions are more advanced, and I don’t want you to address them from a technical standpoint or provide code. But they give you an idea of what you can do with data mining techniques… provided you know why you want to do it. I invite you to think about the perspective these questions open up and, if you feel ready to do so, to write a short paragraph about it.
+We could use logistic regression to predict the probability of being a snorer based on other variables such as age, weight, height, BMI, alcohol consumption, and smoking status. This would allow us to understand how these factors contribute to the likelihood of snoring. Which may be meaningful to disease pre-diagnosis and prevention.
 
+In General I took 6 hours to finish the assignment.
 ``` 
 
 
