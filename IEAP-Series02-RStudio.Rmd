@@ -90,10 +90,10 @@ intercept_panu_eenu <- coef(lm_panu_eenu)[1]
 cat("The regression equation for PANU is: PANU =", slope_panu_eenu, "* EENU +", intercept_panu_eenu, "\n")
 
 ```
-| none | equation                  |
-|:-----|:-----------------------------|
-| PANU~SANU | PANU = 0.100933 * SANU + 8.868194         |
-| PANU~EENU | PANU = 0.3985147 * EENU + 5.672947         |
+| none | equation                               |
+|:-----|:---------------------------------------|
+| PANU~SANU | PANU = 0.100933 * SANU + 8.868194 |
+| PANU~EENU | PANU = 0.3985147 * EENU + 5.672947|
 
 
   -Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
