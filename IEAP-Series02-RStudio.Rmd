@@ -360,6 +360,29 @@ The p-value = 0.00814 < 0.05, indicating there is significant difference between
 
 From a more general perspective:
 Are there any correlations between variables?
+```{r}
+# 5.1 Extract quantitative variables and calculate correlations (Spearman for non-normal data)
+quant_vars <- snore %>% select(age, weight, height, bmi, alcool)
+cor_matrix <- cor(quant_vars, method = "spearman")
+p_matrix <- cor.mtest(quant_vars, method = "spearman")$p  # P-values for significance
+
+# 5.2 Visualization: Correlation matrix heatmap
+corrplot(
+  cor_matrix,
+  method = "color",
+  type = "upper",
+  addCoef.col = "black",  # Display correlation coefficients
+  p.mat = p_matrix,
+  sig.level = 0.05,       # Highlight significant correlations (p < 0.05)
+  insig = "blank",        # Omit non-significant correlations
+  title = "Correlation Matrix of Quantitative Variables",
+  mar = c(0, 0, 1, 0)
+)
+```
+This shows:
+Weight and height are strongly positively correlated (0.93).
+Weight and BMI, height and BMI are moderately positively correlated (0.54, 0.30).
+Age and alcohol have little to no clear correlation with other variables here.
 
 
 # Epilogue: beyond the scope of this series
