@@ -336,8 +336,31 @@ ggplot(snore, aes(x = sex, y = bmi, fill = sex)) +
 From P-value = 0.7162 > 0.05, indicating there is no significant difference between gender and bmi. From the mean, we could further verify it.
 
 -Do women smoke less?
+```{r}
+# 4.1 Statistical test: Association between sex and smoking (chi-square)
+smoke_sex_table <- table(snore$sex, snore$tabac)
+smoke_sex_test <- chisq.test(smoke_sex_table)
+cat("\nTest results for association between sex and smoking status:\n")
+print(smoke_sex_test)
+print(smoke_sex_table)  # Display contingency table
+
+# 4.2 Visualization: Smoking prevalence by sex
+prop.table(smoke_sex_table, margin = 1) %>%  # Proportions within sex groups
+  as.data.frame() %>%
+  ggplot(aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_col(position = "dodge", width = 0.6) +
+  labs(
+    title = "Smoking Prevalence by Sex",
+    x = "Sex", y = "Proportion", fill = "Smoking Status"
+  ) +
+  scale_fill_manual(values = c("#999999", "#CCCCCC")) +
+  theme_minimal()
+```
+The p-value = 0.00814 < 0.05, indicating there is significant difference between gender and smoke. From the table we got, the percentage of men who smoke is more than the percentage of women who smoke.
+
 From a more general perspective:
 Are there any correlations between variables?
+
 
 # Epilogue: beyond the scope of this series
 Finally, some of you may want to go beyond the scope of this series with new questions, such as:
