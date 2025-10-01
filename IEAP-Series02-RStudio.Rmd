@@ -167,16 +167,53 @@ Make a table, with one row per variable, and the following columns:
 |time|time point|-|"before","after"|-|
 ### The analysis
 You want to know if the treatment has an effect on one or more of the measured variables.
+```{r}
+# Read data
+data <- read.csv("data/test_data/PrePost.csv")  # Assume the file is named PrePost.csv
+
+# Separate Before and After data
+before <- data[data$time == "Before", "perf"]
+after <- data[data$time == "After", "perf"]
+
+# Check normality of differences
+differences <- after - before
+shapiro.test(differences)
+
+# If p > 0.05 (normal), use paired t-test
+t_test <- t.test(after, before, paired = TRUE)
+t_test
+
+# # If p <= 0.05 (non-normal), use Wilcoxon signed-rank test
+# wilcox_test <- wilcox.test(after, before, paired = TRUE)
+# wilcox_test
+
+# Plot
+library(ggplot2)
+ggplot(data, aes(x = time, y = perf, group = 1)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Performance Before and After Treatment", x = "Time", y = "Performance")
+#boxplot
+ggplot(data, aes(x = time, y = perf)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Performance Before and After Treatment", x = "Time", y = "Performance")
+```
 
 Does the treatment have an effect?
+From the Shapiro-Wilk normality test, we see that the p-value is greater than 0.05, indicating that the differences between the before and after treatment data are normally distributed. Therefore, we can use a paired t-test to compare the means of the two related groups.
+The results of the paired t-test show a significant difference between the performance before and after treatment (t = -5.196, df = 9, p < 0.001). This indicates that the treatment has a significant effect on performance, with an increase in performance observed after the treatment.
 
 What comparison are you going to make?
+Paried comparison of performance before and after treatment.
 
 Which test will you use? Parametric or non-parametric?
+Parametric test (paired t-test) because the differences are normally distributed.
 
 Which graph illustrates the effect of the treatment?
+The line plot illustrates the effect of the treatment by showing individual performance changes from before to after treatment. The boxplot also provides a summary of the performance distribution before and after treatment, highlighting the median, quartiles, and potential outliers.
 
 What sentence will you write in your thesis to explain your result?
+A paired t-test was conducted to compare performance before and after treatment. The results indicated a significant increase in performance following the treatment (t(9) = -5.196, p < 0.001), suggesting that the rehabilitation training had a positive effect on cardiac function performance.
 
 ## Testing some stereotypes
 Humans have stereotypes, some of them are probably true, some others are probably false (e.g., ref ).
