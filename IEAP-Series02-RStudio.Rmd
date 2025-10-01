@@ -222,15 +222,57 @@ Here, we will test stereotypes about snorers… among others.
 
 ### The data
 Download the file snore.txt
+```{r}
+library(ggplot2)
+library(dplyr)
+library(corrplot)
+snore <- read.table("data/test_data/snore.txt", header=TRUE)
+
+
+snore <- snore %>%
+  mutate(
+    bmi = weight / (height/100)^2,  # calculate BMI
+    sex = factor(sex, levels = c("H", "F"), labels = c("Male", "Female")),  #
+    snore = factor(snore, levels = c("O", "N"), labels = c("Snorer", "Non-snorer")),  # 
+    tabac = factor(tabac, levels = c("O", "N"), labels = c("Smoker", "Non-smoker"))  # 
+  )
+
+#
+str(snore)
+```
 
 This file contains anthropometric and qualitative measurements (1 person per line).
 
 ### The analysis
 Do the data confirm the following stereotypes? Provide a reasoned answer (data, figure, result sentence) for each question.
-Are snorers fatter?
-Do snorers drink or smoke more?
-Are men fatter?
-Do women smoke less?
+-Are snorers fatter?
+
+```{r}
+# 1.1 Normality test (to choose between t-test or non-parametric test)
+shapiro.test(snore$bmi[snore$snore == "Snorer"])
+shapiro.test(snore$bmi[snore$snore == "Non-snorer"])
+
+# 1.2 Statistical test (example: t-test if normal; use wilcox.test if non-normal)
+bmi_snore_test <- t.test(bmi ~ snore, data = snore)
+cat("Test results for BMI differences between snorers and non-snorers:\n")
+print(bmi_snore_test)
+
+# 1.3 Visualization: BMI boxplot by snoring status
+ggplot(snore, aes(x = snore, y = bmi, fill = snore)) +
+  geom_boxplot(width = 0.6) +
+  geom_jitter(alpha = 0.6, position = position_jitter(0.1)) +
+  labs(
+    title = "BMI Distribution by Snoring Status",
+    x = "Snoring Status", y = "BMI (kg/m²)"
+  ) +
+  scale_fill_manual(values = c("#FF9999", "#66B2FF")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+-Do snorers drink or smoke more?
+-Are men fatter?
+-Do women smoke less?
 From a more general perspective:
 Are there any correlations between variables?
 
