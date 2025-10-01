@@ -98,7 +98,12 @@ cat("The regression equation for PANU is: PANU =", slope_panu_eenu, "* EENU +", 
 
   -Summarize your results as you would do in your master’s thesis report, or as in a scientific article (e.g., What sentence will you write in the article explaining your result?).
 
+This study analysed the association between proximal upper limb non-use (PANU) and shoulder anterior non-use (SANU) and elbow extension non-use (EENU). Spearman's correlation analysis revealed a significant positive correlation between PANU and SANU (rho=0.22, p<0.05), with an even stronger positive correlation observed with EENU (rho=0.39, p<0.01). This indicates that higher degrees of non-use at the shoulder and elbow joints correlate with increased non-use at the proximal upper limb. Linear regression further quantified these relationships: The equation for PANU versus SANU was: PANU = 0.101 × SANU + 8.868 (For every 1% increase in SANU, PANU increased by an average of 0.101%) ; the equation with EENU was PANU = 0.399 × EENU + 5.673 (for every 1% increase in EENU, PANU increased by an average of 0.399%). Results indicated that EENU exerted a more pronounced effect on PANU than SANU, though both correlations were moderately weak, suggesting potential confounding factors influencing PANU.
+(AI tools are used to translate and beautify it)
+
   -What are the limits of your analysis?
+
+Correlation and regression analysis can only demonstrate the concomitant relationship between variables; they cannot establish causality.
 
 # Statistical tests: comparison of medians (or means?)
 In this series of exercises, you will explore how to compare two groups of data, using non-parametric tests (or parametric tests… if it makes sense to do so).
