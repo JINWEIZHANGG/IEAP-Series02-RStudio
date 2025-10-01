@@ -1,30 +1,21 @@
-# A minimal template for data analysis with RStudio
+#Data Analysis Project: Clinical and Behavioral Insights
 
-This is a minimal template for data analysis with RStudio, intended to researchers in human movement sciences that are new to RStudio.  
+##Overview
+  This project analyzes three datasets to explore relationships between variables, test hypotheses, and validate stereotypes using statistical methods. It covers correlation analysis, group comparisons, and basic regression, with applications in clinical rehabilitation and behavioral studies.
+  Datasets
+  -NonUse.csv: Measures of upper extremity non-use (PANU, SANU, EENU) to explore relationships between proximal arm and joint-specific non-use.
+  -PrePost.csv: Cardiac rehabilitation data with "before/after" performance measurements to assess treatment effects.
+  -snore.txt: Anthropometric and behavioral data (BMI, smoking, alcohol consumption) to test stereotypes about snorers.
 
-Cloning this template for each new data analysis problem should facilitate data analyses with RStudio and minimize potential errors.
+##Key Analyses
+  -Correlation & Regression: Spear between upper limb non-use metrics (Spearman correlation, linear regression).
+  -Pre-Post Treatment: Evaluate effectiveness of cardiac rehabilitation (paired t-test, visualization of changes).
+  -Stereotype Testing: Compare BMI, smoking, and alcohol consumption between snorers/non-snorers and genders (t-tests, Wilcoxon tests, chi-square tests).
+  -Variable Relationships: Correlation matrix of anthropometric variables (age, weight, BMI, etc.).
 
-# Features 
-- A minimal RStudio project structure
-- A R Markdown notebook with a minimal data analysis pipeline
-- A `.gitignore` file to tell Git which files to share and not to share
+##Tools
+  -R (ggplot2, dplyr, corrplot) for data visualization and statistical testing.
+  -R Markdown for reproducible analysis reports.
 
-# Usage (without Git)
-
-- Download as a zip file (green button `< > Code` on the top right of the page)
-- Expand the archive on your computer (e.g., in your `Download` folder).
-- Rename the extracted folder with the name of your new project (e.g., `SeriesOO_analysis`).
-- Move the new `SeriesOO_analysis` folder where it should be located (e.g., in your `Documents/CodeProjects/` directory)
-
-
-# Usage (with Git)
-As this is a template repository, you can clone it to your computer and use it as a starting point for your new data analysis project.
-- Do exactly the same as above, plus... 
-- Use GitHub-Desktop to create a new Git repository from the folder you just created.
-  - Click on `File` > `New repository...` You will need to provide:
-    - The name of your new project (e.g., `ECG_analysis`).
-    - A short description of your project (e.g., `ECG analysis of 100 healthy individuals for my PhD`).
-    - The path to the folder you just created (e.g., `Documents/CodeProjects/ECG_analysis`).
-    - Choose None for the .gitignore file (this template already has a specific one).
-    - Choose None for the License file (this template already has a GNU GPLv3 License).
-
+##Conclusion
+  -The analyses reveal significant relationships (e.g., between elbow non-use and proximal arm non-use) and provide evidence for/against stereotypes (e.g., snorers consume more alcohol but show no significant BMI difference). Advanced methods (prediction, clustering) could further explore hidden patterns for clinical applications.
