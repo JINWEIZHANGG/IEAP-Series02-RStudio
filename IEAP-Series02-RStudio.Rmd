@@ -111,17 +111,40 @@ In this series of exercises, you will explore how to compare two groups of data,
 ## Make clear what is a statistical test, and when to use it.
 Below are some questions to guide your analysis. You can answer them in your notebook, with a short sentence for each question.
 
-What is a median? A mean?
-What is a variance? A standard deviation?
-What is a normal distribution?
-What is a statistical test?
-When to use a statistical test?
-What is a parametric test? A non-parametric test?
-What are the assumptions of parametric tests?
-What are the assumptions of non-parametric tests?
-What is a p-value?
-What is the risk of error when using a statistical test?
-What is the difference between a paired and an unpaired test?
+-What is a median? A mean?
+Sort the data, and find the middle value. It may be the average of the two middle values if there is an even number of data points. (https://en.wikipedia.org/wiki/Median). Mean is the sum of all values divided by the number of values. (https://en.wikipedia.org/wiki/Mean)
+
+-What is a variance? A standard deviation?
+Variance is the average of the squared differences from the mean. It measures how far a set of numbers are spread out from their average value. (https://en.wikipedia.org/wiki/Variance) Standard deviation is the square root of the variance, and it provides a measure of the average distance between each data point and the mean. (https://en.wikipedia.org/wiki/Standard_deviation)
+
+-What is a normal distribution?
+A normal distribution, also known as Gaussian distribution, is a continuous probability distribution characterized by a symmetric, bell-shaped curve. It is defined by its mean and standard deviation, with most of the data points clustering around the mean and fewer points appearing as you move further away. (https://en.wikipedia.org/wiki/Normal_distribution)
+
+-What is a statistical test?
+A method for inferring whether the parameters or distribution of a population conform to a hypothesis based on sample data, with conclusions drawn by calculating a test statistic or p-value. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)
+
+-When to use a statistical test?
+When you want to determine if there is a significant difference between groups or if there is a relationship between variables, especially when dealing with sample data rather than entire populations. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing)
+
+-What is a parametric test? A non-parametric test?
+Parametric tests are statistical tests that make assumptions about the parameters of the population distribution from which the samples are drawn, typically assuming a normal distribution. Examples include t-tests and ANOVA. (https://en.wikipedia.org/wiki/Parametric_statistics) 
+Non-parametric tests do not assume a specific population distribution and are used when data do not meet the assumptions required for parametric tests. Examples include the Mann-Whitney U test and the Wilcoxon signed-rank test. (https://en.wikipedia.org/wiki/Nonparametric_statistics)
+
+-What are the assumptions of parametric tests?
+Parametric tests typically assume that the data are normally distributed, that the samples are independent, and that the variances of the populations are equal (homoscedasticity). (https://en.wikipedia.org/wiki/Parametric_statistics#Assumptions)
+
+-What are the assumptions of non-parametric tests?
+Non-parametric tests generally assume that the data are independent and identically distributed, but they do not require the data to follow a specific distribution, such as normality. (https://en.wikipedia.org/wiki/Nonparametric_statistics#Assumptions)
+
+-What is a p-value?
+A p-value is the probability of obtaining test results at least as extreme as the observed results, assuming that the null hypothesis is true. It helps determine the statistical significance of the results. (https://en.wikipedia.org/wiki/P-value)
+
+-What is the risk of error when using a statistical test?
+The risk of error, often denoted by alpha (α), is the probability of rejecting the null hypothesis when it is actually true (Type I error). Commonly used significance levels are 0.05 or 0.01, indicating a 5% or 1% risk of making this error. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#Errors)
+
+-What is the difference between a paired and an unpaired test?
+A paired test is used when the data points in one group are related to the data points in another group, such as measurements taken from the same subjects before and after a treatment. An unpaired test is used when the data points in one group are independent of those in another group, such as comparing two different groups of subjects. (https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#Types_of_tests)
+
 You can use your favorite LLM, book or web site to answer these questions, but you have to provide at least one reference for each answer (book, article, URL, LLM prompt, etc.).
 
 ## Effect of treatment over time
@@ -139,7 +162,9 @@ Before going further, you have to make clear what are the measured variables. Wh
 Make a table, with one row per variable, and the following columns:
 
 | Variable | Description | Unit | Possible values | Expected change |
-
+|:---------|:-------------|:-----|:----------------|:----------------|
+|perf|cardiac function performance|-|125-148|increase|
+|time|time point|-|"before","after"|-|
 ### The analysis
 You want to know if the treatment has an effect on one or more of the measured variables.
 
